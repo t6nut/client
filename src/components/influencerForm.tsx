@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { createInfluencer } from '../services/api.ts'; // Import your API function
+import { Box, Button, Container, TextField, Typography, Select, MenuItem, FormControl, InputLabel, FormHelperText, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 interface SocialMediaAccount {
 	platform: 'instagram' | 'tiktok';
@@ -16,6 +19,12 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 		setSocialMediaAccounts([...socialMediaAccounts, { platform: 'instagram', username: '' }]);
 	};
 
+	const handleRemoveSocialMediaAccount = (index: number) => {
+		const updatedAccounts = [...socialMediaAccounts];
+		updatedAccounts.splice(index, 1);
+		setSocialMediaAccounts(updatedAccounts);
+	};
+
 	const handleSocialMediaAccountChange = (index: number, field: keyof SocialMediaAccount, value: string) => {
 		const updatedAccounts = [...socialMediaAccounts];
 		updatedAccounts[index][field] = value;
@@ -28,30 +37,38 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 		e.preventDefault();
 		setError(null);  // Clear any previous errors
 
+		// Input validation:
+		if (firstName.length > 50 || lastName.length > 50) {
+			setError("First and last names cannot exceed 50 characters.");
+			return;
+		}
+
+		const uniqueAccounts = new Set();
+		for (const account of socialMediaAccounts) {
+			const key = `${account.platform}-${account.username}`;
+			if (uniqueAccounts.has(key)) {
+				setError("Duplicate social media accounts are not allowed.");
+				return;
+			}
+			uniqueAccounts.add(key);
+		}
 
 		try {
 			const newInfluencer = {
 				firstName,
 				lastName,
 				socialMediaAccounts,
-
 			};
 
+			await createInfluencer(newInfluencer);
+			refreshListProp(true);
 
-			await createInfluencer(newInfluencer);	
-			refreshListProp(true);		
-
-			// Reset form after successful submission
+			// Reset form
 			setFirstName('');
 			setLastName('');
 			setSocialMediaAccounts([]);
-
-
 		} catch (err) {
-
-			// Display the error message from the API response or a generic message
 			setError(err?.message || 'Failed to create influencer.');
-
 		}
 
 	};
@@ -60,40 +77,82 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 
 
 	return (
-		<form onSubmit={handleSubmit}>
-			{/*Error message handling*/}
-			{error && (
-				<div style={{ color: 'red' }}>{error}</div>
-			)}
-			<div>
-				<label htmlFor="firstName">First Name:</label>
-				<input type="text" id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} maxLength={50} required /> {/* Enforce max length */}
-			</div>
-			<div>
-				<label htmlFor="lastName">Last Name:</label>
-				<input type="text" id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} maxLength={50} required />
-			</div>
+		<Container maxWidth="sm">
+			<Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
+				<Typography variant="h5" component="h2" gutterBottom>
+					Create Influencer
+				</Typography>
+
+				<form onSubmit={handleSubmit}>  {/* Form tag starts here */}
+					{error && (
+						<Typography color="error" variant="body2">
+							{error}
+						</Typography>
+					)}
+
+					<TextField
+						label="First Name"
+						variant="outlined"
+						value={firstName}
+						onChange={e => setFirstName(e.target.value)}
+						inputProps={{ maxLength: 50 }}
+						required
+						fullWidth
+					/>
+
+					<TextField
+						label="Last Name"
+						variant="outlined"
+						value={lastName}
+						onChange={e => setLastName(e.target.value)}
+						inputProps={{ maxLength: 50 }}
+						required
+						fullWidth
+					/>
+
+					{socialMediaAccounts.map((account, index) => (
+						<Box key={index} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+							<FormControl fullWidth> {/* Removed onSubmit from FormControl */}
+								<InputLabel id={`platform-label-${index}`}>Platform</InputLabel>
+								<Select
+									labelId={`platform-label-${index}`}
+									value={account.platform}
+									onChange={e => handleSocialMediaAccountChange(index, 'platform', e.target.value)}
+									label="Platform"
+								>
+									<MenuItem value="instagram">Instagram</MenuItem>
+									<MenuItem value="tiktok">TikTok</MenuItem>
+								</Select>
+							</FormControl>
+							<TextField
+								label="Username"
+								variant="outlined"
+								value={account.username}
+								onChange={e => handleSocialMediaAccountChange(index, 'username', e.target.value)}
+								fullWidth
+							/>
+							<IconButton
+								onClick={() => handleRemoveSocialMediaAccount(index)}
+								aria-label="delete"
+								size="small"
+							>
+								<DeleteIcon fontSize="inherit" />
+							</IconButton>
+						</Box>
+					))}
+
+					<Button variant="contained" onClick={handleAddSocialMediaAccount}>
+						Add Social Media Account
+					</Button>
 
 
-			{/*Dynamic social media account inputs*/}
-			{socialMediaAccounts.map((account, index) => (
+					<Button variant="contained" color="primary" type="submit">
+						Create Influencer
+					</Button>
+				</form> {/* Form tag ends here */}
 
-				<div key={index}>
-					<select value={account.platform} onChange={e => handleSocialMediaAccountChange(index, 'platform', e.target.value)}>
-						<option value="instagram">Instagram</option>
-						<option value="tiktok">TikTok</option>
-					</select>
-
-					<input type="text" value={account.username} onChange={e => handleSocialMediaAccountChange(index, 'username', e.target.value)} placeholder="Username" />
-
-
-
-				</div>
-			))}
-			<button type="button" onClick={handleAddSocialMediaAccount}>Add Social Media Account</button> {/*Add account button*/}
-
-			<button type="submit">Create Influencer</button>
-		</form>
+			</Box>
+		</Container>
 	);
 };
 

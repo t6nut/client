@@ -4,6 +4,8 @@ import ErrorMessage from './ErrorMessage.tsx';
 import LoadingSpinner from './LoadingSpinner.tsx';
 import InfluencerComponent from './Influencer.tsx';
 import debounce from 'lodash.debounce';
+import { Box, Container, TextField, Typography, CircularProgress, List, ListItem } from '@mui/material';
+
 
 interface IInfluencer {
 	id: number;
@@ -79,26 +81,35 @@ const InfluencerList: React.FC<{
 	}, [influencers, filter]);
 
 	return (
-		<div>
-			<div>
-				<input
-					type="text"
+		<Container maxWidth="md"> {/* Center the content */}
+			<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+				<Typography variant="h5" component="h2" gutterBottom>
+					Influencer List
+				</Typography>
+
+				<TextField
+					label="Filter Influencers"
+					variant="outlined"
 					value={filter}
 					onChange={handleFilterChange}
-					placeholder="Filter influencers"
+					sx={{ width: '100%', mb: 2 }} // Full width input
 				/>
-			</div>
 
-			{/* Only show the spinner outside the input field */}
-			{loading && <div style={{ marginTop: '10px' }}><LoadingSpinner /></div>}
+				{loading && <CircularProgress />} {/* MUI Loading Indicator */}
 
-			{error && <ErrorMessage message={error} />}
+				{error && <ErrorMessage message={error} />}
 
-			{!loading &&
-				filteredInfluencers.map((influencer) => (
-					<InfluencerComponent key={influencer.id} influencer={influencer} />
-				))}
-		</div>
+				{!loading && (
+					<List>
+						{filteredInfluencers.map((influencer) => (
+							<ListItem key={influencer.id} divider>
+								<InfluencerComponent influencer={influencer} />
+							</ListItem>
+						))}
+					</List>
+				)}
+			</Box>
+		</Container>
 	);
 };
 
