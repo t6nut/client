@@ -1,13 +1,14 @@
-// App.tsx
 import React, { useState } from 'react';
 import InfluencerForm from './components/InfluencerForm.tsx';
 import InfluencerList from './components/InfluencerList.tsx';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; // Import routing components
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 function App() {
-	const [refreshList, setRefreshList] = useState(false); //To refresh the list on Influencer creation
+	const [refreshList, setRefreshList] = useState(false); // To refresh the list on Influencer creation
+	const [filter, setFilter] = useState(''); // Lifted state for the filter
+
 	return (
-		<Router> {/* Wrap your app in a Router */}
+		<Router>
 			<div>
 				<nav>
 					<ul>
@@ -20,16 +21,34 @@ function App() {
 					</ul>
 				</nav>
 
-				<Routes> {/* Use Routes to define your routes */}
+				<Routes>
 					<Route path="/create" element={<InfluencerForm refreshListProp={setRefreshList} />} />
-					<Route path="/list" element={<InfluencerList refreshListProp={refreshList} setRefreshListProp={setRefreshList} />} />
-					<Route path="/" element={<InfluencerList refreshListProp={refreshList} setRefreshListProp={setRefreshList} />} />
+					<Route
+						path="/list"
+						element={
+							<InfluencerList
+								refreshListProp={refreshList}
+								setRefreshListProp={setRefreshList}
+								filter={filter} // Pass the filter as a prop
+								setFilter={setFilter} // Pass the filter setter as a prop
+							/>
+						}
+					/>
+					<Route
+						path="/"
+						element={
+							<InfluencerList
+								refreshListProp={refreshList}
+								setRefreshListProp={setRefreshList}
+								filter={filter} // Pass the filter as a prop
+								setFilter={setFilter} // Pass the filter setter as a prop
+							/>
+						}
+					/>
 				</Routes>
-
 			</div>
 		</Router>
 	);
 }
 
 export default App;
-
