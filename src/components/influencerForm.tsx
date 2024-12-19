@@ -6,7 +6,7 @@ interface SocialMediaAccount {
 	username: string;
 }
 
-const InfluencerForm: React.FC = () => {
+const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateAction<boolean>> }> = ({ refreshListProp }) => { // Receive the prop
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [socialMediaAccounts, setSocialMediaAccounts] = useState<SocialMediaAccount[]>([]);
@@ -38,8 +38,8 @@ const InfluencerForm: React.FC = () => {
 			};
 
 
-			await createInfluencer(newInfluencer);
-
+			await createInfluencer(newInfluencer);	
+			refreshListProp(true);		
 
 			// Reset form after successful submission
 			setFirstName('');
@@ -91,7 +91,6 @@ const InfluencerForm: React.FC = () => {
 				</div>
 			))}
 			<button type="button" onClick={handleAddSocialMediaAccount}>Add Social Media Account</button> {/*Add account button*/}
-
 
 			<button type="submit">Create Influencer</button>
 		</form>
