@@ -5,3 +5,8 @@ export interface Influencer { // Make sure this matches your backend data
 	socialMediaAccounts: { platform: 'instagram' | 'tiktok'; username: string }[];
 	manager?: { id: number; name: string }; // Optional manager
 }
+
+export interface IManager {
+	id: number;
+	name: string;
+}

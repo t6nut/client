@@ -111,7 +111,20 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 						inputProps={{ maxLength: 50 }}
 						required
 						fullWidth
-						sx={{ width: '100%', mb: 2 }}
+						sx={{
+							width: '100%',
+							mb: 2,
+							'& .MuiOutlinedInput-root': {
+								'&.Mui-focused fieldset': {
+									borderColor: '#aeffde', // Change border color on focus
+								},
+							},
+							'& .MuiInputLabel-root': {
+								'&.Mui-focused': {
+									color: '#aeffde', // Change label color on focus
+								},
+							},
+						}}
 					/>
 
 					<TextField
@@ -122,7 +135,20 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 						inputProps={{ maxLength: 50 }}
 						required
 						fullWidth
-						sx={{ width: '100%', mb: 2 }}
+						sx={{
+							width: '100%',
+							mb: 2,
+							'& .MuiOutlinedInput-root': {
+								'&.Mui-focused fieldset': {
+									borderColor: '#aeffde', // Change border color on focus
+								},
+							},
+							'& .MuiInputLabel-root': {
+								'&.Mui-focused': {
+									color: '#aeffde', // Change label color on focus
+								},
+							},
+						}}
 					/>
 
 					{socialMediaAccounts.map((account, index) => (
@@ -144,6 +170,19 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 										handleSocialMediaAccountChange(index, 'platform', e.target.value)
 									}
 									label="Platform"
+									sx={{
+										'& .MuiOutlinedInput-notchedOutline': {
+											borderColor: '#aeffde', // Change border color of dropdown
+										},
+										'& .MuiInputLabel-root': {
+											'&.Mui-focused': {
+												color: '#aeffde', // Change label color on focus
+											},
+										},
+										'&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+											borderColor: '#aeffde', // Change border color of dropdown on focus
+										},
+									}}
 								>
 									<MenuItem value="instagram">Instagram</MenuItem>
 									<MenuItem value="tiktok">TikTok</MenuItem>
@@ -157,7 +196,19 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 									handleSocialMediaAccountChange(index, 'username', e.target.value)
 								}
 								fullWidth
-								sx={{ flex: 3 }}
+								sx={{
+									flex: 3,
+									'& .MuiOutlinedInput-root': {
+										'&.Mui-focused fieldset': {
+											borderColor: '#aeffde', // Change border color on focus
+										},
+									},
+									'& .MuiInputLabel-root': {
+										'&.Mui-focused': {
+											color: '#aeffde', // Change label color on focus
+										},
+									},
+								}}
 							/>
 							<IconButton
 								onClick={() => handleRemoveSocialMediaAccount(index)}
@@ -172,17 +223,34 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 					<Button
 						variant="contained"
 						onClick={handleAddSocialMediaAccount}
-						sx={{ mb: 2 }}
+						fullWidth
+						sx={{
+							mb: 2,
+							color: '#ebff08',
+							border: '1px solid #ebff08',
+							backgroundColor: 'transparent',
+						}}
 					>
 						Add Social Media Account
 					</Button>
 
-					<Button variant="contained" color="primary" type="submit" fullWidth>
+					<Button
+						variant="contained"
+						color="primary"
+						type="submit"
+						fullWidth
+						sx={{
+							mb: 2,
+							backgroundColor: '#ebff08',
+						}}
+					>
 						Create Influencer
 					</Button>
 				</form>
 			</Box>
 		</Container>
+
+
 	);
 };
 
