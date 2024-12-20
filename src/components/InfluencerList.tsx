@@ -105,7 +105,12 @@ const InfluencerList: React.FC<{
 	const filteredInfluencers = useMemo(() => {
 		return influencers.filter((influencer) => {
 			const fullName = `${influencer.firstName} ${influencer.lastName}`.toLowerCase();
-			return fullName.includes(filter.toLowerCase());
+			const managerName = influencer.manager?.name.toLowerCase() || '';
+
+			// Filter by influencer name or manager name
+			return (
+				fullName.includes(filter.toLowerCase()) || managerName.includes(filter.toLowerCase())
+			);
 		});
 	}, [influencers, filter]);
 
@@ -153,6 +158,13 @@ const InfluencerList: React.FC<{
 
 				{loading && <CircularProgress sx={{ mt: 2 }} />} {/* MUI Loading Indicator */}
 				{error && <ErrorMessage message={error} />}
+
+				{/* Error message when no influencers are found */}
+				{filteredInfluencers.length === 0 && !loading && (
+					<Typography variant="body2" sx={{ color: '#f44336', mt: 2 }}>
+						No influencers found matching your filter.
+					</Typography>
+				)}
 
 				{/* List container with scrollable feature */}
 				<Box

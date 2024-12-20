@@ -161,7 +161,7 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 								mb: 2,
 							}}
 						>
-							<FormControl fullWidth sx={{ flex: 1 }}>
+							<FormControl sx={{ width: '100%' }}>
 								<InputLabel id={`platform-label-${index}`}>Platform</InputLabel>
 								<Select
 									labelId={`platform-label-${index}`}
@@ -197,7 +197,6 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 								}
 								fullWidth
 								sx={{
-									flex: 3,
 									'& .MuiOutlinedInput-root': {
 										'&.Mui-focused fieldset': {
 											borderColor: '#aeffde', // Change border color on focus
@@ -249,8 +248,6 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 				</form>
 			</Box>
 		</Container>
-
-
 	);
 };
 

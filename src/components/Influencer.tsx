@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IInfluencer } from '../services/api.ts';
 import { IManager } from '../services/types.ts';
-import { Select, MenuItem, FormControl, InputLabel, Button, CircularProgress } from '@mui/material';
+import { Typography, Box, List, ListItem, ListItemText, Select, MenuItem, FormControl, InputLabel, Button, CircularProgress } from '@mui/material';
 
 interface InfluencerComponentProps {
 	influencer: IInfluencer;
@@ -30,52 +30,89 @@ const InfluencerComponent: React.FC<InfluencerComponentProps> = ({
 
 	return (
 		<div>
-			<h3>
+			<Typography variant="h4" sx={{ color: '#ebff08', mb: 2 }}>
 				{influencer.firstName} {influencer.lastName}
-			</h3>
-			<ul>
-				{influencer.socialMediaAccounts.map((account) => (
-					<li key={account.username}>
-						{account.platform}: {account.username}
-					</li>
-				))}
-			</ul>
+			</Typography>
 
-			<FormControl fullWidth>
-				<InputLabel id={`manager-label-${influencer.id}`}>Manager</InputLabel>
-				<Select
-					labelId={`manager-label-${influencer.id}`}
-					value={selectedManager || ''}
-					onChange={handleManagerChange}
-					label="Manager"
-					disabled={assignLoading}
-					renderValue={(value) =>
-						value !== '' ? managers.find((m) => m.id === value)?.name || 'None' : 'None'
-					}
-				>
-					<MenuItem value={null}>None</MenuItem>
-					{managers.map((manager) => (
-						<MenuItem key={manager.id} value={manager.id}>
-							{manager.name}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
+			<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+				{/* Left column for influencer details */}
+				<Box sx={{ flex: 1 }}>
+					<List sx={{ pl: 2, paddingLeft: 0 }}>
+						{influencer.socialMediaAccounts.map((account) => (
+							<ListItem key={account.username} sx={{ color: '#aeffde' }}>
+								<ListItemText
+									primary={`${account.platform}: ${account.username}`}
+									sx={{
+										'& .MuiListItemText-primary': {
+											fontWeight: 500,
+										},
+									}}
+								/>
+							</ListItem>
+						))}
+					</List>
+				</Box>
 
-			{assignLoading ? (
-				<CircularProgress size={24} />
-			) : (
-				<Button
-					onClick={handleAssign}
-					disabled={selectedManager === influencer.manager?.id}
-					variant="contained"
-					color="primary"
-					size="small"
-				>
-					{influencer.manager ? 'Update' : 'Assign'}
-				</Button>
-			)}
+				{/* Right column for manager dropdown and button */}
+				<Box sx={{ flex: 1, ml: 4 }}>
+					<FormControl fullWidth sx={{ mb: 2 }}>
+						<InputLabel id={`manager-label-${influencer.id}`} sx={{ color: '#aeffde' }}>
+							Manager
+						</InputLabel>
+						<Select
+							labelId={`manager-label-${influencer.id}`}
+							value={selectedManager || ''}
+							onChange={handleManagerChange}
+							label="Manager"
+							disabled={assignLoading}
+							sx={{
+								'& .MuiOutlinedInput-root': {
+									'&.Mui-focused fieldset': {
+										borderColor: '#aeffde', // Set focus border color
+									},
+								},
+								'& .MuiInputLabel-root': {
+									'&.Mui-focused': {
+										color: '#aeffde', // Change label color on focus
+									},
+								},
+							}}
+							renderValue={(value) =>
+								value !== '' ? managers.find((m) => m.id === value)?.name || 'None' : 'None'
+							}
+						>
+							<MenuItem value={null}>None</MenuItem>
+							{managers.map((manager) => (
+								<MenuItem key={manager.id} value={manager.id}>
+									{manager.name}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+
+					{assignLoading ? (
+						<CircularProgress size={24} />
+					) : (
+						<Button
+							onClick={handleAssign}
+							disabled={selectedManager === influencer.manager?.id}
+							variant="contained"
+							sx={{
+								backgroundColor: '#ebff08', // Button color
+								'&:hover': {
+									backgroundColor: '#c7e700', // Hover color
+								},
+								color: '#000', // Text color for button
+								size: 'small',
+							}}
+						>
+							{influencer.manager ? 'Update' : 'Assign'}
+						</Button>
+					)}
+				</Box>
+			</Box>
 		</div>
+
 	);
 };
 
