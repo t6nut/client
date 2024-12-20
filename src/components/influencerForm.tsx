@@ -78,14 +78,27 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 
 	return (
 		<Container maxWidth="sm">
-			<Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
-				<Typography variant="h5" component="h2" gutterBottom>
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					mt: 4,
+					bgcolor: 'background.default', // Use theme background for dark mode
+					color: 'text.primary', // Use theme text for dark mode
+					p: 3,
+					borderRadius: 2,
+					border: '1px solid #ebff08',
+					boxShadow: 3,
+				}}
+			>
+				<Typography variant="h4" component="h2" gutterBottom>
 					Create Influencer
 				</Typography>
 
-				<form onSubmit={handleSubmit}>  {/* Form tag starts here */}
+				<form onSubmit={handleSubmit}>
 					{error && (
-						<Typography color="error" variant="body2">
+						<Typography color="error" variant="body2" sx={{ mb: 2 }}>
 							{error}
 						</Typography>
 					)}
@@ -94,30 +107,42 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 						label="First Name"
 						variant="outlined"
 						value={firstName}
-						onChange={e => setFirstName(e.target.value)}
+						onChange={(e) => setFirstName(e.target.value)}
 						inputProps={{ maxLength: 50 }}
 						required
 						fullWidth
+						sx={{ width: '100%', mb: 2 }}
 					/>
 
 					<TextField
 						label="Last Name"
 						variant="outlined"
 						value={lastName}
-						onChange={e => setLastName(e.target.value)}
+						onChange={(e) => setLastName(e.target.value)}
 						inputProps={{ maxLength: 50 }}
 						required
 						fullWidth
+						sx={{ width: '100%', mb: 2 }}
 					/>
 
 					{socialMediaAccounts.map((account, index) => (
-						<Box key={index} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-							<FormControl fullWidth> {/* Removed onSubmit from FormControl */}
+						<Box
+							key={index}
+							sx={{
+								display: 'flex',
+								gap: 2,
+								alignItems: 'center',
+								mb: 2,
+							}}
+						>
+							<FormControl fullWidth sx={{ flex: 1 }}>
 								<InputLabel id={`platform-label-${index}`}>Platform</InputLabel>
 								<Select
 									labelId={`platform-label-${index}`}
 									value={account.platform}
-									onChange={e => handleSocialMediaAccountChange(index, 'platform', e.target.value)}
+									onChange={(e) =>
+										handleSocialMediaAccountChange(index, 'platform', e.target.value)
+									}
 									label="Platform"
 								>
 									<MenuItem value="instagram">Instagram</MenuItem>
@@ -128,8 +153,11 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 								label="Username"
 								variant="outlined"
 								value={account.username}
-								onChange={e => handleSocialMediaAccountChange(index, 'username', e.target.value)}
+								onChange={(e) =>
+									handleSocialMediaAccountChange(index, 'username', e.target.value)
+								}
 								fullWidth
+								sx={{ flex: 3 }}
 							/>
 							<IconButton
 								onClick={() => handleRemoveSocialMediaAccount(index)}
@@ -141,16 +169,18 @@ const InfluencerForm: React.FC<{ refreshListProp: React.Dispatch<React.SetStateA
 						</Box>
 					))}
 
-					<Button variant="contained" onClick={handleAddSocialMediaAccount}>
+					<Button
+						variant="contained"
+						onClick={handleAddSocialMediaAccount}
+						sx={{ mb: 2 }}
+					>
 						Add Social Media Account
 					</Button>
 
-
-					<Button variant="contained" color="primary" type="submit">
+					<Button variant="contained" color="primary" type="submit" fullWidth>
 						Create Influencer
 					</Button>
-				</form> {/* Form tag ends here */}
-
+				</form>
 			</Box>
 		</Container>
 	);
